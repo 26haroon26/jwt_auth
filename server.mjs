@@ -2,9 +2,9 @@ import express from "express";
 import path from "path";
 import cors from "cors";
 import mongoose from "mongoose";
-import { Jwt } from "jsonwebtoken";
+import jwt from "jsonwebtoken";
 import cookieParser from "cookie-parser";
-import {stringToHash ,validateHash,varifyHash} from "bcrypt-inzi";
+import { stringToHash, validateHash, varifyHash } from "bcrypt-inzi";
 // bcrypt-nodejs real liabrary he bcrypt-inzi us pr ek wrapper he complete liabrary nahi
 
 const SECRET = process.env.SECRET || "topsceret";
@@ -26,7 +26,6 @@ const userSchema = new mongoose.Schema({
   createdOn: { type: Date, default: Date.now },
 });
 const userModel = mongoose.model("Users", userSchema);
-
 
 let productSchema = new mongoose.Schema({
   name: { type: String, required: true },
@@ -67,11 +66,9 @@ app.post("/signup", (req, res) => {
       if (data) {
         // user already exist
         console.log("user already exist: ", data);
-        res
-          .status(400)
-          .send({
-            message: "user already exist,, please try a different email",
-          });
+        res.status(400).send({
+          message: "user already exist,, please try a different email",
+        });
         return;
       } else {
         // user not already exist
@@ -120,12 +117,13 @@ app.post("/login", (req, res) => {
     );
     return;
   }
+  req.body.email = req.body.email.toLowerCase();
 
   // check if user already exist // query email user
   userModel.findOne(
     { email: body.email },
-    // { email:1, firstName:1, lastName:1, age:1, password:0 },
-    "email firstName lastName age password",
+    //jitne items ke need ho yo manga sakhte hen  dono trh likh sakhte hen { email:1, firstName:1, lastName:1, password:0 },
+    "email firstName lastName password",
     (err, data) => {
       if (!err) {
         console.log("data: ", data);
@@ -138,18 +136,23 @@ app.post("/login", (req, res) => {
             if (isMatched) {
               var token = jwt.sign(
                 {
+                  //ye payload he
+                  //token me id is lye de he ke bad me querry na chalene prhee
                   _id: data._id,
                   email: data.email,
+                  //issue date -30 is lye kya he quen ke agr koi issue krte he request kre to reject ho gae ge is lye 30 seconf=d ko minus krdya
                   iat: Math.floor(Date.now() / 1000) - 30,
                   exp: Math.floor(Date.now() / 1000) + 60 * 60 * 24,
                 },
                 SECRET
               );
+              //ab token me ek sign ajae ga
 
-              console.log("token: ", token);
-
+              //express ke documentation me ye cookie wala code he
               res.cookie("Token", token, {
+                //maxAge : 86,400,000 same he is ka mtlb 24 yours he is maxage ke expire hote he browser is ko remove krdega
                 maxAge: 86_400_000,
+                //httponly secure he or javascript se accesable nahi
                 httpOnly: true,
               });
 
@@ -159,7 +162,6 @@ app.post("/login", (req, res) => {
                   email: data.email,
                   firstName: data.firstName,
                   lastName: data.lastName,
-                  age: data.age,
                   _id: data._id,
                 },
               });

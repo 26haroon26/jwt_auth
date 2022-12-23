@@ -188,84 +188,47 @@ app.post("/login", (req, res) => {
 });
 
 // for Logout
+app.post("/logout", (req, res) => {
+  res.cookie("Token", "", {
+    maxAge: 1,
+    httpOnly: true,
+  });
 
-app.post("/login", (req, res) => {
-  let body = req.body;
+  res.send({ message: "Logout successful" });
+});
 
-  if (!body.email || !body.password) {
-    // null check - undefined, "", 0 , false, null , NaN
-    res.status(400).send(
-      `required fields missing, request example: 
-                {
-                    "email": "abc@abc.com",
-                    "password": "12345"
-                }`
-    );
+// for routes checking as a bariar
+
+app.use((req, res, next) => {
+  if (!req?.cookies?.Token) {
+    res.status(401).send({
+      message: "include http-only credentials with every request",
+    });
     return;
   }
+  jwt.verify(req.cookies.Token, SECRET, (err, decodedData) => {
+    if (!err) {
+      console.log("decodedData: ", decodedData);
 
-  // check if user already exist // query email user
-  userModel.findOne(
-    { email: body.email },
-    // { email:1, firstName:1, lastName:1, age:1, password:0 },
-    "email firstName lastName age password",
-    (err, data) => {
-      if (!err) {
-        console.log("data: ", data);
+      const nowDate = new Date().getTime() / 1000;
 
-        if (data) {
-          // user found
-          varifyHash(body.password, data.password).then((isMatched) => {
-            console.log("isMatched: ", isMatched);
-
-            if (isMatched) {
-              var token = jwt.sign(
-                {
-                  _id: data._id,
-                  email: data.email,
-                  iat: Math.floor(Date.now() / 1000) - 30,
-                  exp: Math.floor(Date.now() / 1000) + 60 * 60 * 24,
-                },
-                SECRET
-              );
-
-              console.log("token: ", token);
-
-              res.cookie("Token", token, {
-                maxAge: 86_400_000,
-                httpOnly: true,
-              });
-
-              res.send({
-                message: "login successful",
-                profile: {
-                  email: data.email,
-                  firstName: data.firstName,
-                  lastName: data.lastName,
-                  age: data.age,
-                  _id: data._id,
-                },
-              });
-              return;
-            } else {
-              console.log("user not found");
-              res.status(401).send({ message: "Incorrect email or password" });
-              return;
-            }
-          });
-        } else {
-          // user not already exist
-          console.log("user not found");
-          res.status(401).send({ message: "Incorrect email or password" });
-          return;
-        }
+      if (decodedData.exp < nowDate) {
+        res.status(401).send({message:"token expired"});
+        res.cookie("Token", "", {
+          maxAge: 1,
+          httpOnly: true,
+        });
       } else {
-        console.log("db error: ", err);
-        res.status(500).send({ message: "login failed, please try later" });
-        return;
+        console.log("token approved");
+
+        req.body.token = decodedData;
+        next();
+        // next call krne ke wjah se request age barh jae ge
       }
+    } else {
+      res.status(401).send("invalid token");
     }
-  );
+  });
 });
 
 app.post("/product", (req, res) => {

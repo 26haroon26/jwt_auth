@@ -123,7 +123,7 @@ app.post("/login", (req, res) => {
   userModel.findOne(
     { email: body.email },
     //jitne items ke need ho yo manga sakhte hen  dono trh likh sakhte hen { email:1, firstName:1, lastName:1, password:0 },
-    "email firstName lastName password",
+     "firstName lastName email password",
     (err, data) => {
       if (!err) {
         console.log("data: ", data);

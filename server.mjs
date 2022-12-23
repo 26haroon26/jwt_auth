@@ -4,7 +4,7 @@ import cors from "cors";
 import mongoose from "mongoose";
 import jwt from "jsonwebtoken";
 import cookieParser from "cookie-parser";
-import { stringToHash, validateHash, varifyHash } from "bcrypt-inzi";
+import { stringToHash, varifyHash } from "bcrypt-inzi";
 // bcrypt-nodejs real liabrary he bcrypt-inzi us pr ek wrapper he complete liabrary nahi
 
 const SECRET = process.env.SECRET || "topsceret";
@@ -15,7 +15,7 @@ const mongodbURI =
 const app = express();
 // app.use(cors());
 // jb server alg url pr ho or frontend alg url pr ho to cors lgate hen w
-app.use(cors({ origin: ["https://resplendent-croissant-d895ff.netlify.app/"], credentials: true }));
+app.use(cors({ origin: "https://resplendent-croissant-d895ff.netlify.app", credentials: true }));
 app.use(express.json());
 app.use(cookieParser());
 const userSchema = new mongoose.Schema({
@@ -200,7 +200,7 @@ app.post("/logout", (req, res) => {
 // for routes checking as a bariar
 
 app.use((req, res, next) => {
-  if (!req?.cookies?.Token) {
+  if (req?.cookies?.Token) {
     res.status(401).send({
       message: "include http-only credentials with every request",
     });

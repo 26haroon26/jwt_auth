@@ -1,64 +1,63 @@
-import React from "react";
-import { useFormik } from "formik";
-import * as yup from "yup";
 import "./style.css";
-import { useNavigate } from "react-router-dom";
+import { useState } from "react";
+import axios from "axios";
+let baseUrl = "";
+if (window.location.href.split(":")[0] === "http") {
+  baseUrl = "http://localhost:4000";
+} else {
+  baseUrl = "https://crudmongodbpwa-production.up.railway.app";
+}
 
+function login() {
+  const [result, setResult] = useState("");
 
-const validationSchema = yup.object({
-  email: yup
-    .string("Enter your email")
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const loginHandler = async (e) => {
+    e.preventDefault();
 
-    .email("Enter a valid email")
-    .required("Email is required"),
-  password: yup
-    .string("Enter your password")
-    .min(8, "Password should be of minimum 8 characters length")
-    .required("Password is required"),
-});
+    try {
+      let response = await axios.post(
+        `${baseUrl}/login`,
+        {
+          email: email,
+          password: password,
+        },
+        {
+          withCredentials: true,
+        }
+      );
 
-const WithMaterialUI = () => {
-    const navigate = useNavigate();
-
-    const formik = useFormik({
-    initialValues: {
-      email: "",
-      password: "",
-    },
-    validationSchema: validationSchema,
-    onSubmit: (values) => {
-        console.log(values);
-            navigate('/dashboard')
-    },
-  });
-
-//   let handleSubmit = ()=>{
-        //     navigate('/dashboard')
-
-//   }
+      console.log("login successful");
+      setResult("login successful");
+    } catch (e) {
+      console.log("e: ", e);
+    }
+  };
   return (
     <div>
       <fieldset>
         <legend>Login</legend>
-        <form onSubmit={formik.handleSubmit}>
+        <p>{result}</p>
+        <form onSubmit={loginHandler}>
           <input
             id="email"
             label="Email"
             placeholder="jane@acme.com"
-            value={formik.values.email}
-            onChange={formik.handleChange}
-            
+            onChange={(e) => {
+              setEmail(e.target.value);
+            }}
           />
           <input
             id="password"
             label="Password"
             type="password"
             placeholder="Password"
-            value={formik.values.password}
-            onChange={formik.handleChange}
-            
+            onChange={(e) => {
+              setPassword(e.target.value);
+            }}
           />
-           <button className="loginbtn" type="submit">
+          <button className="loginbtn" type="submit">
             Submit
           </button>
           {/* <button className="loginbtn" variant="contained"  onClick={handleSubmit}>
@@ -68,5 +67,6 @@ const WithMaterialUI = () => {
       </fieldset>
     </div>
   );
-};
-export default WithMaterialUI;
+}
+
+export default login;

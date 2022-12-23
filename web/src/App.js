@@ -1,6 +1,6 @@
 import './App.css';
 import SignIn from './components/signin'
-import WithMaterialUI from './components/login'
+import Login from './components/login'
 import Dashboard from './components/dashboard'
 import { BrowserRouter as Router,
   Routes,
@@ -18,10 +18,9 @@ function App() {
         </div>
      <Routes>
       <Route index element={<SignIn/>}/>
-      <Route exact path='/login' element={<WithMaterialUI/>}/>
+      <Route exact path='/login' element={<Login/>}/>
       <Route exact path='/dashboard' element={<Dashboard/>}/>
      </Routes>
-     {/* formik yup */}
      
       </Router>
     </div>

@@ -5,8 +5,9 @@ let baseUrl = "";
 if (window.location.href.split(":")[0] === "http") {
   baseUrl = "http://localhost:4000";
 } else {
-  baseUrl = "https://crudmongodbpwa-production.up.railway.app";
+  baseUrl = "";
 }
+// https://crudmongodbpwa-production.up.railway.app
 const SignIn = () => {
   const [result, setResult] = useState("");
   const [name, setName] = useState("");
@@ -35,7 +36,7 @@ const SignIn = () => {
     <>
       <fieldset className="feildSignin">
         <legend> SignIn</legend>
-        <p>{result}</p>
+        <p className="result">{result}</p>
         <form onSubmit={signupHandler}>
           <label htmlFor="firstName">First Name</label>
 
@@ -77,7 +78,7 @@ const SignIn = () => {
           <label htmlFor="password">Password</label>
           <input
             type="password"
-            id="lastName"
+            id="password"
             name="new-password"
             autoComplete="new-password"
             placeholder="confirm password"

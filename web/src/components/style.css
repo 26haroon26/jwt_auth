@@ -6,7 +6,10 @@ body {
     height: 100vh;
     width: 100vw;
   }
-  
+  .result{
+    text-align: center;
+    color: red;
+  }
   .two,
   #first a {
     text-decoration: none;

@@ -11,11 +11,11 @@ const SECRET = process.env.SECRET || "topsceret";
 const port = process.env.PORT || 4000;
 const mongodbURI =
   process.env.mongodbURI ||
-  "mongodb+srv://abc:abc@cluster0.qgyid76.mongodb.net/pwaproduct?retryWrites=true&w=majority";
+  "mongodb+srv://abc:abc@cluster0.qgyid76.mongodb.net/logindata?retryWrites=true&w=majority";
 const app = express();
 app.use(cors());
 // jb server alg url pr ho or frontend alg url pr ho to cors lgate hen w
-app.use(cors({ origin: ["http://localhost:4000", "*"], credentials: true }));
+// app.use(cors({ origin: ["http://localhost:3000"], credentials: true }));
 app.use(express.json());
 app.use(cookieParser());
 const userSchema = new mongoose.Schema({
@@ -213,7 +213,7 @@ app.use((req, res, next) => {
       const nowDate = new Date().getTime() / 1000;
 
       if (decodedData.exp < nowDate) {
-        res.status(401).send({message:"token expired"});
+        res.status(401).send({ message: "token expired" });
         res.cookie("Token", "", {
           maxAge: 1,
           httpOnly: true,

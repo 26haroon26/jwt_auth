@@ -5,12 +5,11 @@ let baseUrl = "";
 if (window.location.href.split(":")[0] === "http") {
   baseUrl = "http://localhost:4000";
 } else {
-  baseUrl = "https://crudmongodbpwa-production.up.railway.app";
+  baseUrl = "";
 }
-
-function login() {
+// https://crudmongodbpwa-production.up.railway.app
+function Login() {
   const [result, setResult] = useState("");
-
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const loginHandler = async (e) => {
@@ -38,11 +37,12 @@ function login() {
     <div>
       <fieldset>
         <legend>Login</legend>
-        <p>{result}</p>
+        <p className="result">{result}</p>
         <form onSubmit={loginHandler}>
           <input
             id="email"
             label="Email"
+            type="email"
             placeholder="jane@acme.com"
             onChange={(e) => {
               setEmail(e.target.value);
@@ -60,13 +60,11 @@ function login() {
           <button className="loginbtn" type="submit">
             Submit
           </button>
-          {/* <button className="loginbtn" variant="contained"  onClick={handleSubmit}>
-            Submit
-          </button> */}
+        
         </form>
       </fieldset>
     </div>
   );
 }
 
-export default login;
+export default Login;

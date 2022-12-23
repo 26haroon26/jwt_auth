@@ -13,9 +13,9 @@ const mongodbURI =
   process.env.mongodbURI ||
   "mongodb+srv://abc:abc@cluster0.qgyid76.mongodb.net/logindata?retryWrites=true&w=majority";
 const app = express();
-app.use(cors());
+// app.use(cors());
 // jb server alg url pr ho or frontend alg url pr ho to cors lgate hen w
-// app.use(cors({ origin: ["http://localhost:3000"], credentials: true }));
+app.use(cors({ origin: ["http://localhost:3000"], credentials: true }));
 app.use(express.json());
 app.use(cookieParser());
 const userSchema = new mongoose.Schema({

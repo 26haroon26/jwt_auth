@@ -5,7 +5,7 @@ let baseUrl = "";
 if (window.location.href.split(":")[0] === "http") {
   baseUrl = "http://localhost:4000";
 } else {
-  baseUrl = "";
+  baseUrl = "https://zany-gold-swordfish-tie.cyclic.app";
 }
 // https://crudmongodbpwa-production.up.railway.app
 function Login() {

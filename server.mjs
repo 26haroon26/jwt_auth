@@ -4,18 +4,18 @@ import cors from "cors";
 import mongoose from "mongoose";
 import jwt from "jsonwebtoken";
 import cookieParser from "cookie-parser";
-import { stringToHash, varifyHash } from "bcrypt-inzi";
+import { stringToHash, varifyHash, } from "bcrypt-inzi";
 // bcrypt-nodejs real liabrary he bcrypt-inzi us pr ek wrapper he complete liabrary nahi
 
 const SECRET = process.env.SECRET || "topsceret";
+const app = express();
 const port = process.env.PORT || 4000;
 const mongodbURI =
   process.env.mongodbURI ||
   "mongodb+srv://abc:abc@cluster0.qgyid76.mongodb.net/logindata?retryWrites=true&w=majority";
-const app = express();
 // app.use(cors());
 // jb server alg url pr ho or frontend alg url pr ho to cors lgate hen w
-app.use(cors({ origin: "https://resplendent-croissant-d895ff.netlify.app", credentials: true }));
+app.use(cors({ origin: ["https://resplendent-croissant-d895ff.netlify.app", "*"], credentials: true }));
 app.use(express.json());
 app.use(cookieParser());
 const userSchema = new mongoose.Schema({
@@ -123,24 +123,25 @@ app.post("/login", (req, res) => {
   userModel.findOne(
     { email: body.email },
     //jitne items ke need ho yo manga sakhte hen  dono trh likh sakhte hen { email:1, firstName:1, lastName:1, password:0 },
-     "firstName lastName email password",
+    "firstName lastName email password",
     (err, data) => {
       if (!err) {
         console.log("data: ", data);
 
         if (data) {
           // user found
+
           varifyHash(body.password, data.password).then((isMatched) => {
             console.log("isMatched: ", isMatched);
 
             if (isMatched) {
               var token = jwt.sign(
+                //ye payload he
+                //token me id is lye de he ke bad me querry na chalene prhee
+                //issue date -30 is lye kya he quen ke agr koi issue krte he request kre to reject ho gae ge is lye 30 seconf=d ko minus krdya
                 {
-                  //ye payload he
-                  //token me id is lye de he ke bad me querry na chalene prhee
                   _id: data._id,
                   email: data.email,
-                  //issue date -30 is lye kya he quen ke agr koi issue krte he request kre to reject ho gae ge is lye 30 seconf=d ko minus krdya
                   iat: Math.floor(Date.now() / 1000) - 30,
                   exp: Math.floor(Date.now() / 1000) + 60 * 60 * 24,
                 },
@@ -149,19 +150,19 @@ app.post("/login", (req, res) => {
               //ab token me ek sign ajae ga
 
               //express ke documentation me ye cookie wala code he
+              //maxAge : 86,400,000 same he is ka mtlb 24 yours he is maxage ke expire hote he browser is ko remove krdega
+              //httponly secure he or javascript se accesable nahi
               res.cookie("Token", token, {
-                //maxAge : 86,400,000 same he is ka mtlb 24 yours he is maxage ke expire hote he browser is ko remove krdega
                 maxAge: 86_400_000,
-                //httponly secure he or javascript se accesable nahi
                 httpOnly: true,
               });
 
               res.send({
                 message: "login successful",
                 profile: {
-                  email: data.email,
                   firstName: data.firstName,
                   lastName: data.lastName,
+                  email: data.email,
                   _id: data._id,
                 },
               });
@@ -200,7 +201,7 @@ app.post("/logout", (req, res) => {
 // for routes checking as a bariar
 
 app.use((req, res, next) => {
-  if (req?.cookies?.Token) {
+  if (!req?.cookies?.Token) {
     res.status(401).send({
       message: "include http-only credentials with every request",
     });
@@ -405,9 +406,9 @@ app.use("*", express.static(path.join(__dirname, "./web/build")));
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
 });
-mongoose.set('strictQuery', false);
-mongoose.connect(mongodbURI);
 
+mongoose.set("strictQuery", false);
+mongoose.connect(mongodbURI);
 mongoose.connection.on("connected", function () {
   //connected
   console.log("Mongoose is connected");

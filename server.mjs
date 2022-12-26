@@ -15,7 +15,14 @@ const mongodbURI =
   "mongodb+srv://abc:abc@cluster0.qgyid76.mongodb.net/logindata?retryWrites=true&w=majority";
 // app.use(cors());
 // jb server alg url pr ho or frontend alg url pr ho to cors lgate hen w
-app.use(cors({ origin: ["https://resplendent-croissant-d895ff.netlify.app","https://dainty-banoffee-c78400.netlify.app","https://dainty-banoffee-c78400.netlify.app/signup","http://localhost:3000", "*"], credentials: true }));
+app.use(cors({
+  origin: [
+    "https://resplendent-croissant-d895ff.netlify.app",
+    "https://dainty-banoffee-c78400.netlify.app",
+    "http://localhost:3000"
+  ],
+  credentials: true
+}));
 app.use(express.json());
 app.use(cookieParser());
 const userSchema = new mongoose.Schema({

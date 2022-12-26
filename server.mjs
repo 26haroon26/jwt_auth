@@ -162,7 +162,7 @@ app.post("/login", (req, res) => {
               res.cookie("Token", token, {
                 maxAge: 86_400_000,
                 httpOnly: true,
-                sameSite:None,
+                sameSite:"none",
                 secure:true,
               });
 

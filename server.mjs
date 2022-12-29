@@ -57,7 +57,7 @@ app.use("/api/v1", (req, res, next) => {
     }
   });
 });
-app.get('/profile', (req, res) => {
+app.get('/api/v1/profile', (req, res) => {
   userModel.findOne({ email: req.body._decoded.email }, (err, user) => {
 
       if (err) {

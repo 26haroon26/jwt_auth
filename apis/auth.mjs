@@ -141,13 +141,13 @@ router.post("/login", (req, res) => {
 });
 
 router.post("/log", (req, res) => {
-  res.cookie("Token", "abcd ", {
-    maxAge: 1000,
-    httpOnly: true,
-    sameSite: 'none',
-    secure: true
-  });
-
+  // res.cookie("Token", "abcd ", {
+  //   maxAge: 1000,
+  //   httpOnly: true,
+  //   sameSite: 'none',
+  //   secure: true
+  // });
+  res.clearCookie("Token", { path: "/" });
   res.send({ message: "Logout successful" });
 });
 

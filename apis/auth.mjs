@@ -141,11 +141,11 @@ router.post("/login", (req, res) => {
 });
 
 router.post("/logout", (req, res) => {
-  res.cookie("Token", " ", {
-    // maxAge: 0,
-    // httpOnly: true,
-    // sameSite: "none",
-    // secure: true,
+  res.cookie("Token", "none", {
+    expi  expires: new Date(Date.now() + 1000),
+    httpOnly: true,
+    sameSite: "none",
+    secure: true,
   });
 
   res.send({ message: "Logout successful" });

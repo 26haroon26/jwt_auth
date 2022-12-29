@@ -5,7 +5,7 @@ import authApis from "./apis/auth.mjs";
 import productApis from "./apis/product.mjs";
 import jwt from "jsonwebtoken";
 import cookieParser from "cookie-parser";
-
+import mongoose from "mongoose";
 const SECRET = process.env.SECRET || "topsceret";
 const app = express();
 const port = process.env.PORT || 4000;

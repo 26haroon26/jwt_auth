@@ -58,7 +58,7 @@ app.use("/api/v1", (req, res, next) => {
   });
 });
 app.get('/api/v1/profile', (req, res) => {
-  userModel.findOne({ email: req.body._decoded.email }, (err, user) => {
+  userModel.findOne({ email: "hhh@gmail.com"}, (err, user) => {
 
       if (err) {
           res.status(500).send("error in getting database")

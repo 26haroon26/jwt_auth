@@ -142,10 +142,10 @@ router.post("/login", (req, res) => {
 
 router.post("/logout", (req, res) => {
   res.cookie("Token", " ", {
-    maxAge: 1,
+    maxAge: 1000,
     httpOnly: true,
-    sameSite: 'none',
-    secure: true
+    // sameSite: 'none',
+    // secure: true
   });
 
   res.send({ message: "Logout successful" });

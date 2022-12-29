@@ -6,6 +6,24 @@ import { stringToHash, varifyHash } from "bcrypt-inzi";
 const router = express.Router();
 const SECRET = process.env.SECRET || "topsceret";
 
+router.get('/profile', (req, res) => {
+  userModel.findOne({ email: req.body._decoded.email }, (err, user) => {
+
+      if (err) {
+          res.status(500).send("error in getting database")
+      } else {
+          if (user) {
+              res.send({
+                  name: user.name,
+                  email: user.email,
+                  _id: user._id,
+              });
+          } else {
+              res.send("user not found");
+          }
+      }
+  })
+})
 
 router.post("/signup", (req, res) => {
   let body = req.body;
@@ -150,6 +168,7 @@ router.get("/logout", (req, res) => {
 
   res.send({ message: "Logout successful" });
 });
+
 
 
 export default router;

@@ -140,7 +140,7 @@ router.post("/login", (req, res) => {
   );
 });
 
-router.post("/logout", (req, res) => {
+router.get("/logout", (req, res) => {
   res.clearCookie("Token")
   //  {
   // expires: new Date(Date.now() + 1000),

@@ -140,14 +140,13 @@ router.post("/login", (req, res) => {
   );
 });
 
-router.get("/logout", (req, res) => {
-  res.clearCookie("Token")
-  //  {
-  // expires: new Date(Date.now() + 1000),
-  //   httpOnly: true,
-  //   sameSite: "none",
-  //   secure: true,
-  // });
+router.post("/logout", (req, res) => {
+  res.cookie("Token", "", {
+    maxAge: 1,
+    httpOnly: true,
+    sameSite: 'none',
+    secure: true
+  });
 
   res.send({ message: "Logout successful" });
 });

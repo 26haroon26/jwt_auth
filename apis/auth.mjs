@@ -2,7 +2,7 @@ import express from "express";
 import jwt from "jsonwebtoken";
 import { userModel } from "../dbrepo/model.mjs";
 import { stringToHash, varifyHash } from "bcrypt-inzi";
-
+import Cookies from "js-cookie";
 const router = express.Router();
 const SECRET = process.env.SECRET || "topsceret";
 
@@ -141,13 +141,14 @@ router.post("/login", (req, res) => {
 });
 
 router.post("/logout", (req, res) => {
-  res.cookie("Token", "none", {
-  expires: new Date(Date.now() + 1000),
-    httpOnly: true,
-    sameSite: "none",
-    secure: true,
-  });
+  // res.cookie("Token", "none", {
+  // expires: new Date(Date.now() + 1000),
+  //   httpOnly: true,
+  //   sameSite: "none",
+  //   secure: true,
+  // });
 
+  Cookies.remove("Token");
   res.send({ message: "Logout successful" });
 });
 

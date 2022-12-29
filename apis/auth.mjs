@@ -141,7 +141,7 @@ router.post("/login", (req, res) => {
 });
 
 router.post("/logout", (req, res) => {
-  res.cookie("Token", " ", {
+  res.cookie("Token", "delete ho gaya ", {
     maxAge: 0,
     httpOnly: true,
     sameSite: "none",

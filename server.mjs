@@ -57,25 +57,6 @@ app.use("/api/v1", (req, res, next) => {
     }
   });
 });
-app.get('/api/v1/profile', (req, res) => {
-  userModel.findOne({ email: "hhh@gmail.com"}, (err, user) => {
-
-      if (err) {
-          res.status(500).send("error in getting database")
-      } else {
-          if (user) {
-              res.send({
-                  name: user.name,
-                  email: user.email,
-                  _id: user._id,
-              });
-          } else {
-              res.send("user not found");
-          }
-      }
-  })
-})
-
 app.use("/api/v1", productApis);
 
 

@@ -5,14 +5,14 @@ import { stringToHash, varifyHash } from "bcrypt-inzi";
 
 const router = express.Router();
 const SECRET = process.env.SECRET || "topsceret";
-router.post("/log", (req, res) => {
-  // res.cookie("Token", "abcd ", {
-  //   maxAge: 1000,
-  //   httpOnly: true,
-  //   sameSite: 'none',
-  //   secure: true
-  // });
-  res.clearCookie("Token", { path: "/" });
+router.get("/log", (req, res) => {
+  res.cookie("Token", " ", {
+    maxAge: 0,
+    httpOnly: true,
+    sameSite: 'none',
+    secure: true
+  });
+
   res.send({ message: "Logout successful" });
 });
 

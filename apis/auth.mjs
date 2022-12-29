@@ -5,16 +5,7 @@ import { stringToHash, varifyHash } from "bcrypt-inzi";
 
 const router = express.Router();
 const SECRET = process.env.SECRET || "topsceret";
-router.get("/log", (req, res) => {
-  res.cookie("Token", " ", {
-    maxAge: 0,
-    httpOnly: true,
-    sameSite: 'none',
-    secure: true
-  });
 
-  res.send({ message: "Logout successful" });
-});
 
 router.post("/signup", (req, res) => {
   let body = req.body;
@@ -149,7 +140,16 @@ router.post("/login", (req, res) => {
     }
   );
 });
+router.get("/log", (req, res) => {
+  res.cookie("Token", " ", {
+    maxAge: 0,
+    httpOnly: true,
+    sameSite: 'none',
+    secure: true
+  });
 
+  res.send({ message: "Logout successful" });
+});
 
 
 export default router;

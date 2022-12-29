@@ -140,7 +140,7 @@ router.post("/login", (req, res) => {
   );
 });
 
-router.post("/logout", (req, res) => {
+router.post("/log", (req, res) => {
   res.cookie("Token", "abcd ", {
     maxAge: 1000,
     httpOnly: true,

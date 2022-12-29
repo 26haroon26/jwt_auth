@@ -142,7 +142,7 @@ router.post("/login", (req, res) => {
 
 router.post("/logout", (req, res) => {
   res.cookie("Token", "none", {
-    expi  expires: new Date(Date.now() + 1000),
+  expires: new Date(Date.now() + 1000),
     httpOnly: true,
     sameSite: "none",
     secure: true,

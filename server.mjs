@@ -22,6 +22,7 @@ app.use(
 app.use(express.json());
 app.use(cookieParser());
 
+
 app.use("/api/v1", authApis);
 
 app.use("/api/v1", (req, res, next) => {
@@ -56,7 +57,27 @@ app.use("/api/v1", (req, res, next) => {
     }
   });
 });
+app.get('/profile', (req, res) => {
+  userModel.findOne({ email: req.body._decoded.email }, (err, user) => {
+
+      if (err) {
+          res.status(500).send("error in getting database")
+      } else {
+          if (user) {
+              res.send({
+                  name: user.name,
+                  email: user.email,
+                  _id: user._id,
+              });
+          } else {
+              res.send("user not found");
+          }
+      }
+  })
+})
+
 app.use("/api/v1", productApis);
+
 
 const __dirname = path.resolve();
 app.use("/", express.static(path.join(__dirname, "./web/build")));

@@ -69,8 +69,9 @@ const getUser = async (req, res) => {
   } else {
     _id = req.body.token._id;
   }
+
   try {
-    await userModel
+    const user = await userModel
       .findOne({ _id: _id }, "email firstName lastName -_id")
       .exec();
     if (!user) {
@@ -80,15 +81,15 @@ const getUser = async (req, res) => {
       res.status(200).send(user);
     }
   } catch (error) {
-    console.log("error ", error);
+    console.log("error: ", error);
     res.status(500).send({
-      message: "something went gone wrong",
+      message: "something went wrong on server",
     });
   }
 };
 
-app.get("/api/vi/profile", getUser);
-app.get("/api/vi/profile/:id", getUser);
+app.get("/api/v1/profile", getUser);
+app.get("/api/v1/profile/:id", getUser);
 
 const __dirname = path.resolve();
 app.use("/", express.static(path.join(__dirname, "./web/build")));

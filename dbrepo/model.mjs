@@ -13,6 +13,8 @@ const productSchema = new mongoose.Schema({
   name: { type: String, required: true },
   price: Number,
   description: String,
+  owner: { type: mongoose.ObjectId, required: true },
+  isDeleted: { type: Boolean, default: false },
   createdOn: { type: Date, default: Date.now },
 });
 

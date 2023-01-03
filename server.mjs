@@ -5,6 +5,8 @@ import authApis from "./apis/auth.mjs";
 import productApis from "./apis/product.mjs";
 import jwt from "jsonwebtoken";
 import cookieParser from "cookie-parser";
+import { userModel } from "./dbrepo/model.mjs";
+
 const SECRET = process.env.SECRET || "topsceret";
 const app = express();
 const port = process.env.PORT || 4000;
@@ -21,7 +23,6 @@ app.use(
 );
 app.use(express.json());
 app.use(cookieParser());
-
 
 app.use("/api/v1", authApis);
 
@@ -40,7 +41,7 @@ app.use("/api/v1", (req, res, next) => {
 
       if (decodedData.exp < nowDate) {
         res.status(401).send({ message: "token expired" });
-        res.cookie("Token", "", {
+        res.cookie("Token", " ", {
           maxAge: 1,
           httpOnly: true,
           sameSite: "none",
@@ -59,6 +60,35 @@ app.use("/api/v1", (req, res, next) => {
 });
 app.use("/api/v1", productApis);
 
+// ye function he jo do bar use ho ga
+
+const getUser = async (req, res) => {
+  let _id = "";
+  if (req.params.id) {
+    _id = req.params.id;
+  } else {
+    _id = req.body.token._id;
+  }
+  try {
+    const user = await userModel
+      .findById(_id, "email firstName lastName -_id")
+      .exec();
+    if (!user) {
+      res.status(404).send({});
+      return;
+    } else {
+      res.status(200).send(user);
+    }
+  } catch (error) {
+    console.log("error ", error);
+    res.status(500).send({
+      message: "something went gone wrong",
+    });
+  }
+};
+
+app.get("/api/vi/profile", getUser);
+app.get("/api/vi/profile/:id", getUser);
 
 const __dirname = path.resolve();
 app.use("/", express.static(path.join(__dirname, "./web/build")));

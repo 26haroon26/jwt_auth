@@ -1,4 +1,5 @@
 import express from "express";
+import mongoose from "mongoose";
 import { productModel } from "../dbrepo/model.mjs";
 
 const router = express.Router();
@@ -22,6 +23,7 @@ router.post("/product", (req, res) => {
       name: body.name,
       price: body.price,
       description: body.description,
+      owner: new mongoose.Types.ObjectId(body.token._id),
     },
     (err, saved) => {
       if (!err) {
@@ -40,18 +42,28 @@ router.post("/product", (req, res) => {
 });
 
 router.get("/products", (req, res) => {
-  productModel.find({}, (err, data) => {
-    if (!err) {
-      res.send({
-        message: "got all products successfully",
-        data: data,
-      });
-    } else {
-      res.status(500).send({
-        message: "server error",
-      });
+  const userID = new mongoose.Types.ObjectId(req.body.token._id);
+  productModel.find(
+    { owner: userID, isDeleted: false },
+    {},
+    {
+      sort: { _id: -1 },
+      limit: 100,
+      skip: 0,
+    },
+    (err, data) => {
+      if (!err) {
+        res.send({
+          message: "got all products successfully",
+          data: data,
+        });
+      } else {
+        res.status(500).send({
+          message: "server error",
+        });
+      }
     }
-  });
+  );
 });
 
 router.get("/product/:name", (req, res) => {
